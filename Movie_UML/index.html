@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Movie Ticket Booking System - UML</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Mermaid Library -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: "dark" });
+  </script>
+</head>
+<body>
+
+<h1>🎬 Movie Ticket Booking System</h1>
+<p class="subtitle">UML Diagrams (Class, Sequence & State)</p>
+
+<!-- CLASS DIAGRAM -->
+<section>
+  <h2>📘 UML Class Diagram</h2>
+  <div class="mermaid">
+classDiagram
+    class Movie {
+      movieId : String
+      title : String
+      genre : String
+      duration : int
+    }
+
+    class Seat {
+      seatNumber : String
+      isBooked : boolean
+    }
+
+    class Screen {
+      screenId : String
+    }
+
+    class Theatre {
+      theatreId : String
+      location : String
+    }
+
+    class Show {
+      showId : String
+      showTime : String
+    }
+
+    class Customer {
+      customerId : String
+      name : String
+      phone : String
+    }
+
+    class Booking {
+      bookingId : String
+      totalAmount : double
+    }
+
+    Screen *-- Seat : contains
+    Theatre o-- Screen : has
+    Show -- Movie : plays
+    Show -- Screen : scheduled on
+    Booking -- Customer : made by
+    Booking -- Show : for
+  </div>
+</section>
+
+<!-- SEQUENCE DIAGRAM -->
+<section>
+  <h2>📙 UML Sequence Diagram</h2>
+  <div class="mermaid">
+sequenceDiagram
+    actor Customer
+    participant App as Main App
+    participant Movie
+    participant Theatre
+    participant Show
+    participant Seat
+    participant Booking
+
+    Customer->>App: Search Movie
+    App->>Movie: getMovieDetails()
+    Movie-->>App: movieInfo
+
+    Customer->>App: Select Show
+    App->>Theatre: getShows()
+    Theatre-->>App: showList
+    App->>Show: getShowDetails()
+    Show-->>App: showInfo
+
+    Customer->>App: Select Seats
+    App->>Seat: checkAvailability()
+    Seat-->>App: availableSeats
+
+    Customer->>App: Confirm Booking
+    App->>Booking: createBooking()
+    Booking->>Booking: calculatePrice()
+    App-->>Customer: Ticket Confirmation
+  </div>
+</section>
+
+<!-- STATE DIAGRAM -->
+<section>
+  <h2>📕 UML State Chart Diagram</h2>
+  <div class="mermaid">
+stateDiagram-v2
+    [*] --> Idle
+    Idle --> MovieSelected : searchMovie
+    MovieSelected --> ShowSelected : selectShow
+    ShowSelected --> SeatsSelected : chooseSeats
+    SeatsSelected --> BookingInProgress : confirmBooking
+    BookingInProgress --> PaymentProcessing : proceedToPayment
+    PaymentProcessing --> BookingConfirmed : paymentSuccess
+    PaymentProcessing --> BookingFailed : paymentFailed
+    BookingConfirmed --> TicketGenerated : generateTicket
+    TicketGenerated --> [*]
+    BookingFailed --> Idle : retryBooking
+  </div>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
